@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, prefer_const_constructors, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'database/base.dart';
 import 'inputVar/datainput.dart';
@@ -170,18 +168,9 @@ class _ListDateState extends State<ListDate> {
                         okButton,
                       ],
                     );
-                    // Untuk Menampilkan dialog data jika kosong
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return alertKosong;
-                      },
-                    );
                   }
-
-                  showAlertDialogKosong(context);
                 } else {
-                  upsertKontak();
+                  upsertlist();
                 }
               },
             ),
@@ -192,21 +181,21 @@ class _ListDateState extends State<ListDate> {
     );
   }
 
-  Future<void> upsertKontak() async {
+  Future<void> upsertlist() async {
     if (widget.inputdata != null) {
       //update
-      await db.updateKontak(Data.fromMap({
+      await db.updatelist(Data.fromMap({
         'id': widget.inputdata!.id,
         'judul': judul!.text,
         'date': date!.text,
         'cust': cust!.text,
         'partner': partner!.text,
-        'describe': descrip!.text
+        'describe': descrip!.text,
       }));
       Navigator.pop(context, 'update');
     } else {
       //insert
-      await db.saveKontak(Data(
+      await db.savelist(Data(
         judul: judul!.text,
         date: date!.text,
         cust: cust!.text,
