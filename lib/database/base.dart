@@ -1,8 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
-//dbhelper ini dibuat untuk
-//membuat database, membuat tabel, proses insert, read, update dan delete
-
 import 'package:customize/inputVar/datainput.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -23,7 +18,6 @@ class Base {
   Base._internal();
   factory Base() => _instance;
 
-  //cek apakah database ada
   Future<Database?> get _db async {
     if (_database != null) {
       return _database;
@@ -34,12 +28,12 @@ class Base {
 
   Future<Database?> _initDb() async {
     String databasePath = await getDatabasesPath();
-    String path = join(databasePath, 'kontak.db');
+    String path = join(databasePath, 'list.db');
 
     return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
-  //membuat tabel dan field-fieldnya
+  //selanjutnya akan dibuat tabel
   Future<void> _onCreate(Database db, int version) async {
     var sql = "CREATE TABLE $Mytable($Idcol INTEGER PRIMARY KEY, "
         "$judulcol TEXT,"
@@ -50,13 +44,13 @@ class Base {
     await db.execute(sql);
   }
 
-  //insert ke database
-  Future<int?> saveKontak(Data inputdata) async {
+  //memasukan ke database
+  Future<int?> savelist(Data inputdata) async {
     var dbClient = await _db;
     return await dbClient!.insert(Mytable, inputdata.toMap());
   }
 
-  //read database
+  //menampilkan data dari database
   Future<List?> putData() async {
     var dbClient = await _db;
     var result = await dbClient!.query(Mytable,
@@ -65,15 +59,15 @@ class Base {
     return result.toList();
   }
 
-  //update database
-  Future<int?> updateKontak(Data inputdata) async {
+  //edit data yan teralh terinput dari database
+  Future<int?> updatelist(Data inputdata) async {
     var dbClient = await _db;
     return await dbClient!.update(Mytable, inputdata.toMap(),
         where: '$Idcol = ?', whereArgs: [inputdata.id]);
   }
 
   //hapus database
-  Future<int?> deleteKontak(int id) async {
+  Future<int?> deletelist(int id) async {
     var dbClient = await _db;
     return await dbClient!
         .delete(Mytable, where: '$Idcol = ?', whereArgs: [id]);

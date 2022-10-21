@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, unnecessary_this, prefer_collection_literals
-
 class Data {
   int? id;
   String? judul;

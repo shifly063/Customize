@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_element, non_constant_identifier_names, avoid_types_as_parameter_names, avoid_function_literals_in_foreach_calls, unused_local_variable, unused_import, use_key_in_widget_constructors
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'database/base.dart';
@@ -35,7 +33,6 @@ class _getsdatePageState extends State<getsdatePage> {
 
   @override
   void initState() {
-    //menjalankan fungsi getallkontak saat pertama kali dimuat
     _putData();
     super.initState();
   }
@@ -54,6 +51,14 @@ class _getsdatePageState extends State<getsdatePage> {
                 fontFeatures: [FontFeature.stylisticSet(6)]),
           ),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: new Icon(Icons.add_box_sharp),
+            onPressed: () {
+              _openFormCreate();
+            },
+          )
+        ],
       ),
       body: ListView.builder(
           itemCount: getsdate.length,
@@ -96,6 +101,13 @@ class _getsdatePageState extends State<getsdatePage> {
                       ),
                       child: Text("Description     : ${inputdata.descrip}"),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 2,
+                      ),
+                      child: Text(
+                          "--------------------------------------------------"),
+                    ),
                   ],
                 ),
                 trailing: FittedBox(
@@ -125,20 +137,17 @@ class _getsdatePageState extends State<getsdatePage> {
                             backgroundColor: Colors.brown[200],
                             title: Text("Information!"),
                             content: SizedBox(
-                              height: 20,
+                              height: 50,
                               child: Column(
                                 children: [
                                   Text("data ${inputdata.judul} akan terhapus")
                                 ],
                               ),
                             ),
-                            //terdapat 2 button.
-                            //jika ya maka jalankan _deleteKontak() dan tutup dialog
-                            //jika tidak maka tutup dialog
                             actions: [
                               TextButton(
                                   onPressed: () {
-                                    _deleteKontak(inputdata, index);
+                                    _deletelist(inputdata, index);
                                     Navigator.pop(context);
                                   },
                                   child: Text("Yes"),
@@ -167,48 +176,35 @@ class _getsdatePageState extends State<getsdatePage> {
             );
           }),
       backgroundColor: Colors.white,
-      //membuat button mengapung di bagian bawah kanan layar
-
-      floatingActionButton: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.brown[600]),
-        child: Icon(
-          Icons.add_box_sharp,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          _openFormCreate();
-        },
-      ),
     );
   }
 
-  //mengambil semua data Kontak
   Future<void> _putData() async {
     //list menampung data dari database
     var list = await db.putData();
 
     //ada perubahanan state
     setState(() {
-      //hapus data pada listKontak
+      //hapus data pada listlist
       getsdate.clear();
 
       //lakukan perulangan pada variabel list
       list!.forEach((inputdata) {
-        //masukan data ke listKontak
+        //masukan data ke listlist
         getsdate.add(Data.fromMap(inputdata));
       });
     });
   }
 
-  //menghapus data Kontak
-  Future<void> _deleteKontak(Data inputdata, int position) async {
-    await db.deleteKontak(inputdata.id!);
+  //menghapus data list
+  Future<void> _deletelist(Data inputdata, int position) async {
+    await db.deletelist(inputdata.id!);
     setState(() {
       getsdate.removeAt(position);
     });
   }
 
-  // membuka halaman tambah Kontak
+  // membuka halaman tambah list
   Future<void> _openFormCreate() async {
     var result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => ListDate()));
@@ -217,7 +213,7 @@ class _getsdatePageState extends State<getsdatePage> {
     }
   }
 
-  //membuka halaman edit Kontak
+  //membuka halaman edit list
   Future<void> _openFormEdit(Data inputdata) async {
     var result = await Navigator.push(
         context,
